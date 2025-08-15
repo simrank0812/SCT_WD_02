@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator</title>
+  <style>
+    body {
+      background-color: #1a1a2e;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      background-color: #0f3460;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+    }
+
+    #display {
+      width: 100%;
+      height: 50px;
+      font-size: 1.5rem;
+      text-align: right;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 15px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #e94560;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #ff6f91;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" readonly />
+    <div class="buttons">
+      <button class="btn" data-value="7">7</button>
+      <button class="btn" data-value="8">8</button>
+      <button class="btn" data-value="9">9</button>
+      <button class="btn" data-value="/">÷</button>
+
+      <button class="btn" data-value="4">4</button>
+      <button class="btn" data-value="5">5</button>
+      <button class="btn" data-value="6">6</button>
+      <button class="btn" data-value="*">×</button>
+
+      <button class="btn" data-value="1">1</button>
+      <button class="btn" data-value="2">2</button>
+      <button class="btn" data-value="3">3</button>
+      <button class="btn" data-value="-">−</button>
+
+      <button class="btn" data-value="0">0</button>
+      <button class="btn" data-value=".">.</button>
+      <button class="btn" id="equal">=</button>
+      <button class="btn" data-value="+">+</button>
+
+      <button class="btn" id="clear">C</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    const buttons = document.querySelectorAll('.btn');
+    const clearBtn = document.getElementById('clear');
+    const equalBtn = document.getElementById('equal');
+
+    let input = '';
+
+    function updateDisplay(value) {
+      input += value;
+      display.value = input;
+    }
+
+    function calculateResult() {
+      try {
+        const result = eval(input);
+        display.value = result;
+        input = result.toString();
+      } catch (error) {
+        display.value = 'Error';
+        input = '';
+      }
+    }
+
+    function clearDisplay() {
+      input = '';
+      display.value = '';
+    }
+
+    buttons.forEach(button => {
+      if (button !== equalBtn && button !== clearBtn) {
+        button.addEventListener('click', () => {
+          updateDisplay(button.getAttribute('data-value'));
+        });
+      }
+    });
+
+    equalBtn.addEventListener('click', calculateResult);
+    clearBtn.addEventListener('click', clearDisplay);
+
+    // Keyboard input handling
+    document.addEventListener('keydown', (event) => {
+      const allowedKeys = '0123456789+-*/.';
+      if (allowedKeys.includes(event.key)) {
+        updateDisplay(event.key);
+      } else if (event.key === 'Enter') {
+        calculateResult();
+      } else if (event.key === 'Backspace') {
+        input = input.slice(0, -1);
+        display.value = input;
+      } else if (event.key === 'Escape') {
+        clearDisplay();
+      }
+    });
+  </script>
+</body>
+</html>
